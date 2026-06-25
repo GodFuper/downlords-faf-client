@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -43,6 +44,7 @@ public class ModCardController extends VaultEntityCardController<ModVersion> {
   public Node modTileRoot;
   public Label numberOfReviewsLabel;
   public Label typeLabel;
+  public Label rankedLabel;
   public Button installButton;
   public Button uninstallButton;
   public StarsController starsController;
@@ -75,6 +77,10 @@ public class ModCardController extends VaultEntityCardController<ModVersion> {
     authorLabel.textProperty().bind(modObservable.map(Mod::author).when(showing));
     typeLabel.textProperty()
              .bind(entity.map(ModVersion::modType).map(ModType::getI18nKey).map(i18n::get).when(showing));
+    rankedLabel.textProperty()
+               .bind(entity.map(ModVersion::ranked)
+                           .map(isRanked -> isRanked ? i18n.get("mod.ranked") : StringUtils.EMPTY)
+                           .when(showing));
   }
 
   public void onInstallButtonClicked() {
